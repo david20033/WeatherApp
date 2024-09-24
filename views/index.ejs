@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will it rain tomorrow</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <form action="/" method="POST">
+        <input type="text" name="text" id="text" placeholder="Search...">
+        <input type="submit" name="submit" id="sumbit" value="Submit" class="small-input">
+        <!-- <ul>
+          <div class="test">Stara Zagora, Bulgaria</div>
+        </ul> -->
+      </form>
+    </div>
+    <div class="main-information">
+      <% if(locals.currTemp&&locals.WeatherCond&&locals.cityName){   %>
+      <h1><%=cityName %></h1>
+      <h2><%=currTemp%>°C</h2>
+
+      <h3><%=WeatherCond[0] %></h3>
+      <% }else{ %>
+      <h1>No results!</h1>
+      <% } %>
+    </div>
+    <div class="secondary-information">
+      <div class="hours-container big">
+        <% if(locals.TempsArr24&&locals.CurrHours&&locals.CurrMinutes&&locals.WeatherCond){
+           var minusHours=0;%>
+        <% for(var i=0;i<TempsArr24.length; i++){ %>
+        <div class="hours-box">
+          <% if(CurrHours+i==24){ minusHours=24;} %>
+          <p><%=CurrHours+i-minusHours%>:<%= CurrMinutes %></p>
+          <%if(isDay[i]==1){%>
+          <img src="images/<%=WeatherCond[i]%>.png" alt="sun-icon">
+          <%} else {
+            if(WeatherCond[i]=="Sunny"&&isDay[i]==0){ WeatherCond[i]="Night"}%>
+          <img src="images/night/<%=WeatherCond[i]%>.png" alt="sun-icon">
+          <%}%>
+          <p><%=Math.round(TempsArr24[i])%>°C</p>
+        </div>
+        <%}}%>
+      </div>
+      <div class="days-container big">
+        <h4>10-day forecast</h4>
+        <%if(locals.DailyMinArr&&locals.DailyMaxArr&&locals.DailyWeatherCond&&locals.DaysArr) {
+          for(var i=0;i<DailyMinArr.length;i++){%>
+        <div class="days-box">
+          <%if(DayIndex==7){DayIndex=0;}%>
+          <p><%=DaysArr[DayIndex++]%></p>
+          <img src="images/<%=DailyWeatherCond[i]%>.png" alt="sun-icon">
+          <p><%=Math.round(DailyMinArr[i])%>°C</p>
+          <p><%=Math.round(DailyMaxArr[i])%>°C</p>
+        </div>
+        <%}}%>
+      </div>
+      <div class="percipiton-container small">
+        <img src="images/precipitation-icon.png" alt="">
+        <h4>Precipitation</h4>
+        <% if(locals.precip){ %>
+        <p><%= precip %>mm in last 24h</p>
+        <% } %>
+      </div>
+      <div class="sunrise-container small">
+        <img src="images/sunrise-icon.png" alt="">
+        <h4>Sunrise & Sunset</h4>
+        <% if(locals.sunrise&& locals.sunset){ 
+                sunrise=sunrise.toString().split("T")[1];
+                sunset=sunset.toString().split("T")[1];
+                %>
+        <p>Sunrise: <%= sunrise %> <br>
+          Sunset: <%=sunset %></p>
+        <% } %>
+      </div>
+      <div class="dayslight-container small">
+        <img src="images/duration-icon.png" alt="">
+        <h4>Days light</h4>
+        <% if(locals.dayslight){
+                dayslight/=3600;
+                var afterDecimal=(dayslight+"").split(".")[1];
+                var hours=Math.floor(dayslight);
+                var minutes= (afterDecimal*60).toString().slice(0,2); %>
+        <p><%=hours%> hours and <%= minutes%> minutes</p>
+        <% } %>
+      </div>
+      <div class="wind-container small">
+        <img src="images/wind-icon.png" alt="">
+        <h4>Wind</h4>
+        <% if(locals.wind){ %>
+        <p><%= wind%>km/h (max)</p>
+        <% } %>
+      </div>
+      <div class="uv-container small">
+        <img src="images/uv-icon.png" alt="">
+        <h4>UV-index</h4>
+        <% if(locals.uv){ %>
+        <p>Max UV-index: <%= uv %></p>
+        <% } %>
+      </div>
+      <div class="humidity small">
+        <img src="images/humidity-icon.png" alt="">
+        <h4>Humidity</h4>
+        <% if(locals.humidity){ %>
+        <p>Humidity: <%= humidity %>%</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>© David Dimitrov</p>
+  </footer>
+</body>
+
+</html>
